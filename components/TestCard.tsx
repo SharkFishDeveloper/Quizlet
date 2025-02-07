@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Test from "../../interfaces/SingleTest";
+import Test from "../interfaces/SingleTest";
 
 interface TestCardProps {
   test: Test;
@@ -9,7 +9,7 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
   const [showMore, setShowMore] = useState(false);
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 mb-4 w-full max-w-sm transition-transform hover:scale-105 border border-gray-200">
+    <div className="bg-white shadow-md rounded-lg p-4 mb-4 w-[25%] transition-transform hover:scale-105 border border-gray-200 cursor-pointer">
       {/* Title */}
       <h3 className="text-md font-semibold text-[#31096b] mb-1">{test.title}</h3>
 
@@ -45,21 +45,13 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
         <p>❓ {test.questions_count} questions</p>
       </div>
 
-      {/* Button Section */}
-      <div className="mt-3 flex justify-between items-center">
-        {/* Show More Button */}
-        <button
-          onClick={() => setShowMore(!showMore)}
-          className="text-xs text-[#31096b] hover:text-[#5a1ca8] transition duration-300"
-        >
-          {showMore ? "Show Less" : "Show More"}
-        </button>
-
-        
-        <button className="bg-[#31096b] text-black text-xs px-4 py-2 rounded-lg hover:bg-[#5a1ca8] transition duration-300 font-lg">
-          Start
-        </button>
-      </div>
+      {/* Show More Button */}
+      <button
+        onClick={() => setShowMore(!showMore)}
+        className="mt-3 text-xs text-[#31096b] hover:text-[#5a1ca8] transition duration-300"
+      >
+        {showMore ? "Show Less" : "Show More"}
+      </button>
 
       {/* Expanded Details */}
       {showMore && (
