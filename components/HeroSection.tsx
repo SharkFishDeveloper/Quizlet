@@ -1,76 +1,55 @@
-import React, { useState } from "react";
-import Test from "../../interfaces/SingleTest";
+import { FaBookOpen, FaCheckCircle, FaClock } from "react-icons/fa";
+import StartButton from "./StartButton";
+import { motion } from "framer-motion";
+import React from "react";
 
-interface TestCardProps {
-  test: Test;
-}
-
-const TestCard: React.FC<TestCardProps> = ({ test }) => {
-  const [showMore, setShowMore] = useState(false);
-
+const HeroSection = () => {
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 mb-4 w-full max-w-sm transition-transform hover:scale-105 border border-gray-200">
-      {/* Title */}
-      <h3 className="text-md font-semibold text-[#31096b] mb-1">{test.title}</h3>
-
-      {/* Name (if available) */}
-      {test.name && <p className="text-xs text-gray-500">{test.name}</p>}
-
-      {/* Description (or fallback) */}
-      <p className="text-xs text-gray-700 mt-1">
-        {test.description ? test.description : "No description available"}
-      </p>
-
-      {/* Difficulty Level */}
-      <p className="text-xs font-medium mt-2">
-        Difficulty:{" "}
-        <span
-          className={`${
-            test.difficulty_level
-              ? test.difficulty_level === "Hard"
-                ? "text-red-500"
-                : test.difficulty_level === "Medium"
-                ? "text-yellow-500"
-                : "text-green-500"
-              : "text-gray-400"
-          }`}
-        >
-          {test.difficulty_level ? test.difficulty_level : "Not Specified"}
-        </span>
-      </p>
-
-      {/* Duration & Questions Count */}
-      <div className="mt-2 text-xs text-gray-600">
-        <p>⏳ {test.duration} mins</p>
-        <p>❓ {test.questions_count} questions</p>
-      </div>
-
-      {/* Button Section */}
-      <div className="mt-3 flex justify-between items-center">
-        {/* Show More Button */}
-        <button
-          onClick={() => setShowMore(!showMore)}
-          className="text-xs text-[#31096b] hover:text-[#5a1ca8] transition duration-300"
-        >
-          {showMore ? "Show Less" : "Show More"}
-        </button>
-
-        
-        <button className="bg-[#31096b] text-black text-xs px-4 py-2 rounded-lg hover:bg-[#5a1ca8] transition duration-300 font-lg">
-          Start
-        </button>
-      </div>
-
-      {/* Expanded Details */}
-      {showMore && (
-        <div className="mt-2 text-xs text-gray-500 border-t pt-2">
-          <p>Topic: {test.topic}</p>
-          <p>🔻 Negative Marks: {test.negative_marks}</p>
-          <p>✅ Correct Marks: {test.correct_answer_marks}</p>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 80 }} // Starts below
+        animate={{ opacity: 1, y: 0 }} // Moves up smoothly
+        transition={{ duration: 0.8, ease: "easeOut" }} // Smooth transition
+        className="bg-white shadow-2xl rounded-2xl p-10 max-w-3xl w-full text-center"
+      >
+        <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
+          Welcome to{" "}
+          <span className="text-yellow-500">
+            <span className="text-[#31096b]">Test</span>
+            <span className="text-cyan-400">Line</span>
+          </span>
+        </h1>
+        <ul className="text-xl text-gray-700 max-w-2xl mx-auto mb-8 leading-relaxed space-y-4 text-left">
+          <li className="flex items-center space-x-2">
+            <span className="text-yellow-500 text-2xl">✔</span>
+            <span>Practice daily</span>
+          </li>
+          <li className="flex items-center space-x-2">
+            <span className="text-yellow-500 text-2xl">✔</span>
+            <span>Topic-wise test series</span>
+          </li>
+          <li className="flex items-center space-x-2">
+            <span className="text-yellow-500 text-2xl">✔</span>
+            <span>Smart revision</span>
+          </li>
+          <li className="flex items-center space-x-2">
+            <span className="text-yellow-500 text-2xl">✔</span>
+            <span>Personal guidance</span>
+          </li>
+          <li className="flex items-center space-x-2">
+            <span className="text-yellow-500 text-2xl">✔</span>
+            <span>Track progress effortlessly</span>
+          </li>
+        </ul>
+        <div className="flex justify-center space-x-6 mb-8 text-gray-700 text-4xl">
+          <FaBookOpen className="hover:text-yellow-500 transition-all" />
+          <FaCheckCircle className="hover:text-green-500 transition-all" />
+          <FaClock className="hover:text-blue-500 transition-all" />
         </div>
-      )}
+        <StartButton />
+      </motion.div>
     </div>
   );
 };
 
-export default TestCard;
+export default HeroSection;
