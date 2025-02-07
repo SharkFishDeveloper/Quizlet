@@ -1,6 +1,7 @@
 import HeroSection from "../components/HeroSection"
 import Appbar from "../components/Appbar"
 import Testlobby from "../components/Screens/Testlobby"
+import Test from "../components/Screens/Test"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -13,6 +14,7 @@ function App() {
     <Routes>
       <Route path="/" element={<HeroSection />} />
       <Route path="/lobby" element={<Testlobby />} />
+      <Route path="/test/:id" element={<Test />} />
     </Routes>
    </Router>
 

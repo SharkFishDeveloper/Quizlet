@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Test from "../interfaces/SingleTest";
+import { Link } from "react-router-dom";
 interface TestCardProps {
   test: Test;
 }
@@ -55,9 +56,11 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
         </button>
 
         {/* Start Button */}
+        <Link to={`/test/${test.id}`}>
         <button className="bg-[#31096b] text-white text-xs px-4 py-2 rounded-lg hover:bg-[#5a1ca8] transition duration-300 cursor-pointer">
           Start
         </button>
+        </Link>
       </div>
 
       {/* Expanded Details */}
