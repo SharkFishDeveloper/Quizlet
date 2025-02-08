@@ -64,74 +64,71 @@ const Test = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-6 w-full h-screen">
+    <div className="flex flex-col items-center space-y-6 w-full h-screen">
       {test && (
         <div className="mt-4">
           <Timer duration={900} id={test.id.toString()} />
         </div>
       )}
-
-
-
-      <div className="grid grid-cols-12 w-full h-[80vh]">
-        {/* Left Sidebar */}
-        <div className="col-span-3 ">
-        
-        </div>
-
+  
+      {/* Grid Layout for Content */}
+      <div className="grid grid-cols-12 w-full h-[70vh] gap-2">
+        {/* Left Sidebar (Hidden on Small Screens) */}
+        <div className="hidden sm:block sm:col-span-3"></div>
+  
         {/* Center (Main Question Area) */}
-        <div className="col-span-6 flex flex-col justify-center items-center p-6 bg-white shadow-lg rounded-lg">
+        <div className="col-span-12 sm:col-span-6 flex flex-col justify-center items-center p-4 bg-white shadow-lg rounded-lg max-h-full">
           {test && (
             <QuestionComponent
               question={test.questions[currentIndex]}
               index={currentIndex}
             />
           )}
-          
         </div>
-
-        {/* Right Sidebar */}
-        <div className="col-span-3 flex justify-center items-center bg-cyan-200">
-
-        <div className="bg-green-200 h-[60%] flex-col">
-        <div className="h-[15rem] w-[12rem] bg-pink-300">Test calender</div>
-
-<div className="bg-red-200 font-semibold flex justify-center">Question {currentIndex+1} of {test?.questions_count}</div>
-<div className="flex justify-center w-full mt-4 bg-green-500">
-    <button
-      
-      onClick={handlePrev}
-      disabled={currentIndex === 0}
-      className={`px-4 py-2 rounded-lg text-white ${
-        currentIndex === 0
-          ? "bg-gray-600 cursor-not-allowed"
-          : "bg-purple-700 hover:bg-purple-900"
-      } mr-4 cursor-pointer`}
-    >
-      <FaArrowLeft />
-    </button>
-
-    <button
-      onClick={handleNext}
-      disabled={test && currentIndex === test.questions.length - 1}
-      className={`px-4 py-2 rounded-lg text-white ${
-        test && currentIndex === test.questions.length - 1
-          ? "bg-gray-600 cursor-not-allowed"
-          : "bg-purple-700 hover:bg-purple-900"
-      } cursor-pointer`}
-    >
-      <FaArrowRight />
-    </button>
-  </div>
-
-        </div>
-          
+  
+        {/* Right Sidebar (Moves Below Center Div on Small Screens) */}
+        <div className="col-span-12 sm:col-span-3 flex flex-col justify-center items-center sm:mt-0 mt-3 sm:mb-0 mb-4 ">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="h-[15rem] w-[12rem] border border-black">
+              Test Calendar
+            </div>
+  
+            <div className="font-semibold">
+              Question {currentIndex + 1} of {test?.questions_count}
+            </div>
+  
+            {/* Navigation Buttons - Ensure They Are Centered */}
+            <div className="flex justify-center w-full mt-4">
+              <button
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className={`px-4 py-2 rounded-lg text-white ${
+                  currentIndex === 0
+                    ? "bg-gray-600 cursor-not-allowed"
+                    : "bg-purple-700 hover:bg-purple-900"
+                } mr-8 cursor-pointer h-[3rem]  w-[3rem]`}
+              >
+                <FaArrowLeft />
+              </button>
+  
+              <button
+                onClick={handleNext}
+                //@ts-expect-error: ignore
+                disabled={test && currentIndex === test.questions.length - 1}
+                className={`px-4 py-2 rounded-lg text-white ${
+                  test && currentIndex === test.questions.length - 1
+                    ? "bg-gray-600 cursor-not-allowed"
+                    : "bg-purple-700 hover:bg-purple-900"
+                } cursor-pointer h-[3rem]  w-[3rem]`}
+              >
+                <FaArrowRight />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-
-
     </div>
   );
-};
+}  
 
 export default Test;
