@@ -5,12 +5,15 @@ import React from "react";
 import Timer from "../Timer";
 import QuestionComponent from "../QuestionComponent";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { selectedOptionsAtom } from "../../atoms/QuestionSolved";
+import { useAtom } from "jotai";
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5);
 };
 
 const Test = () => {
+  const [selectedOptions, setSelectedOptions] = useAtom(selectedOptionsAtom);
   const [test, setTest] = useState<Quiz | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,6 +39,12 @@ const Test = () => {
           }
 
           setTest(quizData);
+
+          // Load previous selections from localStorage
+          const savedSelections = localStorage.getItem(`test-${quizData.id}`);
+          if (savedSelections) {
+            setSelectedOptions(JSON.parse(savedSelections));
+          }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -45,7 +54,14 @@ const Test = () => {
     };
 
     fetchData();
-  }, []);
+  }, [setSelectedOptions]);
+
+  // Save selectedOptions to localStorage whenever it changes
+  useEffect(() => {
+    if (test) {
+      localStorage.setItem(`test-${test.id}`, JSON.stringify(selectedOptions));
+    }
+  }, [selectedOptions, test]);
 
   const handleNext = () => {
     if (test && currentIndex < test.questions.length - 1) {
@@ -70,12 +86,12 @@ const Test = () => {
           <Timer duration={900} id={test.id.toString()} />
         </div>
       )}
-  
+
       {/* Grid Layout for Content */}
       <div className="grid grid-cols-12 w-full h-[70vh] gap-2">
         {/* Left Sidebar (Hidden on Small Screens) */}
         <div className="hidden sm:block sm:col-span-3"></div>
-  
+
         {/* Center (Main Question Area) */}
         <div className="col-span-12 sm:col-span-6 flex flex-col justify-center items-center p-4 bg-white shadow-lg rounded-lg max-h-full">
           {test && (
@@ -85,19 +101,19 @@ const Test = () => {
             />
           )}
         </div>
-  
+
         {/* Right Sidebar (Moves Below Center Div on Small Screens) */}
-        <div className="col-span-12 sm:col-span-3 flex flex-col justify-center items-center sm:mt-0 mt-3 sm:mb-0 mb-4 ">
+        <div className="col-span-12 sm:col-span-3 flex flex-col justify-center items-center sm:mt-0 mt-3 sm:mb-0 mb-4 bg-gray-200 rounded-2xl">
           <div className="flex flex-col items-center space-y-4">
             <div className="h-[15rem] w-[12rem] border border-black">
               Test Calendar
             </div>
-  
+
             <div className="font-semibold">
               Question {currentIndex + 1} of {test?.questions_count}
             </div>
-  
-            {/* Navigation Buttons - Ensure They Are Centered */}
+
+            {/* Navigation Buttons */}
             <div className="flex justify-center w-full mt-4">
               <button
                 onClick={handlePrev}
@@ -110,10 +126,10 @@ const Test = () => {
               >
                 <FaArrowLeft />
               </button>
-  
+
               <button
                 onClick={handleNext}
-                //@ts-expect-error: ignore
+                //@ts-expect-error: s
                 disabled={test && currentIndex === test.questions.length - 1}
                 className={`px-4 py-2 rounded-lg text-white ${
                   test && currentIndex === test.questions.length - 1
@@ -129,6 +145,6 @@ const Test = () => {
       </div>
     </div>
   );
-}  
+};
 
 export default Test;
