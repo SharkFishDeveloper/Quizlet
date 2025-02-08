@@ -24,31 +24,47 @@ const QuestionComponent = ({ question, index }: { question: Question; index: num
     });
   };
 
+  const handleClearSelection = () => {
+    setSelectedOptions((prev) => prev.filter((q) => q.question !== question.id.toString()));
+  };
+
   return (
-    <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6 border border-gray-300">
+    <div className="w-full max-w-3xl bg-white shadow-md rounded-lg p-5 border border-gray-300">
       {/* Question Number */}
-      <div className="text-lg font-semibold text-gray-700">Question {index + 1}</div>
+      <div className="text-lg font-semibold text-gray-800">Question {index + 1}</div>
 
       {/* Question Description */}
-      <p className="mt-2 text-gray-600 text-lg break-words overflow-auto max-w-full">
+      <p className="mt-2 text-gray-700 text-lg break-words overflow-auto">
         {question.description}
       </p>
 
       {/* Options Section */}
-      <div className="mt-6 space-y-3">
+      <div className="mt-4 space-y-2">
         {question.options.map((option, i) => (
           <button
             key={option.id}
             onClick={() => handleOptionSelect(option.id.toString())}
-            className={`w-full text-left p-3 border border-gray-400 rounded-lg flex items-center transition-all duration-200 cursor-pointer ${
-              selectedOption === option.id.toString() ? 'bg-purple-700 text-white' : 'hover:bg-gray-200'
+            className={`w-full text-left p-3 border border-gray-400 rounded-md flex items-center transition-all duration-200 cursor-pointer ${
+              selectedOption === option.id.toString() ? 'bg-purple-600 text-white' : 'hover:bg-gray-200'
             }`}
           >
-            <span className="mr-3 font-bold">{optionLabels[i]}.</span>
+            <span className="mr-2 font-bold">{optionLabels[i]}.</span>
             {option.description}
           </button>
         ))}
       </div>
+
+      {/* Show "Clear Selection" only if an option is selected */}
+      {selectedOption && (
+        <div className="mt-3 flex justify-end">
+          <button
+            onClick={handleClearSelection}
+            className="px-3 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md transition-all"
+          >
+            Clear
+          </button>
+        </div>
+      )}
     </div>
   );
 };  
