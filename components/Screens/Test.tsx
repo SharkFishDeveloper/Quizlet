@@ -10,6 +10,7 @@ import { useAtom } from "jotai";
 import TestCalender from "../TestCalender";
 import {quizAtom} from "../../atoms/IndiviualQuestion";
 import {questionIndexAtom} from "../../atoms/QuestionIndex";
+import SubmitButton from "../SubmitButton";
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5);
@@ -91,10 +92,16 @@ const Test = () => {
     <div className="flex flex-col items-center space-y-6 w-full h-screen">
       {test && (
         <div className="mt-4">
+          <h1 className="text-2xl font-semibold text-gray-800">{test.title}</h1>
+
+          <div className="flex justify-evenly items-center">
+          <SubmitButton/>
           <Timer duration={900} id={test.id.toString()} />
+          </div>
+
         </div>
       )}
-      <p>INDEX - {questionIndex}</p>
+      {/* <p>INDEX - {questionIndex}</p> */}
       {/* Grid Layout for Content */}
       <div className="grid grid-cols-12 w-full h-[70vh] gap-2">
         {/* Left Sidebar (Hidden on Small Screens) */}
@@ -106,6 +113,7 @@ const Test = () => {
             <QuestionComponent
               question={test.questions[questionIndex]}
               index={questionIndex}
+              test_id={test.id.toString()}
             />
           )}
         </div>

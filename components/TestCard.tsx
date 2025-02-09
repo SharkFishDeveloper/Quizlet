@@ -3,6 +3,7 @@ import Test from "../interfaces/SingleTest";
 import { Link } from "react-router-dom";
 import { selectedOptionsAtom } from '../atoms/QuestionSolved';
 import { useAtom } from "jotai";
+import { reminderQuestion } from "../atoms/ReminderQuestion";
 interface TestCardProps {
   test: Test;
 }
@@ -10,6 +11,8 @@ interface TestCardProps {
 const TestCard: React.FC<TestCardProps> = ({ test }) => {
   const [attempted, setAttempted] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [, setReminderQuestions] = useAtom(reminderQuestion);
+
   
   const [, setSelectedOptions] = useAtom(selectedOptionsAtom);
 
@@ -24,9 +27,11 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
   const handleResetTest = () => {
     localStorage.removeItem(`test-${test.id}`);
     localStorage.removeItem(`timeLeft_${test.id}`);
+    localStorage.removeItem(`test_${test.id}_reminders`);
     setAttempted(false);
     setTimeLeft(null);
     setSelectedOptions([]);
+    setReminderQuestions([]);
   };
 
   const [showMore, setShowMore] = useState(false);
