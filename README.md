@@ -42,7 +42,7 @@ Develop a quiz application inspired by **Testline**, integrating data from an AP
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/quiz-app.git
+   git clone https://github.com/SharkFishDeveloper/Quizlet
    cd quiz-app
 
 2. Install dependencies:
