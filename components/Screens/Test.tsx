@@ -11,6 +11,7 @@ import TestCalender from "../TestCalender";
 import {quizAtom} from "../../atoms/IndiviualQuestion";
 import {questionIndexAtom} from "../../atoms/QuestionIndex";
 import SubmitButton from "../SubmitButton";
+import { submitTestAtom } from "../../atoms/SubmitTestAtom";
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5);
@@ -23,6 +24,9 @@ const Test = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [, setQuiz] = useAtom(quizAtom);
   const [questionIndex, setQuestionIndex] = useAtom(questionIndexAtom);
+  const [submittedTests, ] = useAtom(submitTestAtom);
+  const [submitted, setSubmitted] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +51,6 @@ const Test = () => {
           setTest(quizData);
           setQuiz(quizData);
 
-          // Load previous selections from localStorage
           const savedSelections = localStorage.getItem(`test-${quizData.id}`);
           if (savedSelections) {
             setSelectedOptions(JSON.parse(savedSelections));
@@ -63,12 +66,16 @@ const Test = () => {
     fetchData();
   }, [setQuiz, setSelectedOptions]);
 
-  // Save selectedOptions to localStorage whenever it changes
   useEffect(() => {
     if (test) {
       localStorage.setItem(`test-${test.id}`, JSON.stringify(selectedOptions));
+      if(submittedTests !== null){
+       if( submittedTests.includes(test.id.toString())){
+        setSubmitted(true);
+       } 
+      }
     }
-  }, [selectedOptions, test]);
+  }, [selectedOptions, submittedTests, test]);
 
   const handleNext = () => {
     if (test && currentIndex < test.questions.length - 1) {
@@ -94,17 +101,22 @@ const Test = () => {
         <div className="mt-4">
           <h1 className="text-2xl font-semibold text-gray-800">{test.title}</h1>
 
+         {submitted ?
+         (
           <div className="flex justify-evenly items-center">
           <SubmitButton/>
           <Timer duration={900} id={test.id.toString()} />
           </div>
+         ) : 
+         (<div className="font-semibold text-green-600 items-center flex justify-center underline-offset-1 underline text-xl mb-[-1.7rem]">
+          Solutions
+         </div>)
+          }
 
         </div>
       )}
-      {/* <p>INDEX - {questionIndex}</p> */}
-      {/* Grid Layout for Content */}
+
       <div className="grid grid-cols-12 w-full h-[70vh] gap-2">
-        {/* Left Sidebar (Hidden on Small Screens) */}
         <div className="hidden sm:block sm:col-span-3"></div>
 
         {/* Center (Main Question Area) */}

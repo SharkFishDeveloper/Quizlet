@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { selectedOptionsAtom } from '../atoms/QuestionSolved';
 import { useAtom } from "jotai";
 import { reminderQuestion } from "../atoms/ReminderQuestion";
+
 interface TestCardProps {
   test: Test;
 }
@@ -12,15 +13,21 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
   const [attempted, setAttempted] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [, setReminderQuestions] = useAtom(reminderQuestion);
-
-  
   const [, setSelectedOptions] = useAtom(selectedOptionsAtom);
+  const [isSolved, setIsSolved] = useState(false);
 
   useEffect(() => {
+    // Check if the test was previously attempted
     const storedTime = localStorage.getItem(`timeLeft_${test.id}`);
     if (localStorage.getItem(`test-${test.id}`) !== null && storedTime !== null) {
       setAttempted(true);
       setTimeLeft(parseInt(storedTime, 10)); // Convert to number
+    }
+
+    // Check if the test is marked as solved
+    const submittedTests = JSON.parse(localStorage.getItem("test_submit") || "[]");
+    if (submittedTests.includes(test.id.toString())) {
+      setIsSolved(true);
     }
   }, [test.id]);
 
@@ -28,10 +35,16 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
     localStorage.removeItem(`test-${test.id}`);
     localStorage.removeItem(`timeLeft_${test.id}`);
     localStorage.removeItem(`test_${test.id}_reminders`);
+
+    const submittedTests = JSON.parse(localStorage.getItem("test_submit") || "[]");
+    const updatedTests = submittedTests.filter((id: string) => id !== test.id.toString());
+    localStorage.setItem("test_submit", JSON.stringify(updatedTests));
+
     setAttempted(false);
     setTimeLeft(null);
     setSelectedOptions([]);
     setReminderQuestions([]);
+    setIsSolved(false)
   };
 
   const [showMore, setShowMore] = useState(false);
@@ -76,13 +89,13 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
         <div className="mt-3 p-2 bg-yellow-100 border border-yellow-300 text-xs text-yellow-800 rounded-md">
           {timeLeft && timeLeft > 0 ? (
             <>
-              <p className="mb-1">⏳ You have an unfinished test with {Math.floor(timeLeft/60)} minutes left.</p>
-              <div className="flex gap-2 ">
-                <Link to={`/test/${test.id}`} >
+              {!isSolved && <p className="mb-1">⏳ You have an unfinished test with {Math.floor(timeLeft / 60)} minutes left.</p>}
+              <div className="flex gap-2">
+                {!isSolved && <Link to={`/test/${test.id}`}>
                   <button className="bg-[#31096b] text-white text-xs px-3 py-1 rounded-lg hover:bg-[#5a1ca8] transition duration-300 cursor-pointer">
                     Resume Test
                   </button>
-                </Link>
+                </Link>}
                 <button
                   onClick={handleResetTest}
                   className="bg-red-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-red-700 transition duration-300 cursor-pointer"
@@ -105,6 +118,18 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
         </div>
       )}
 
+      {/* Solved Badge & See Solutions */}
+      {isSolved && (
+        <div className="mt-3 p-2 bg-green-100 border border-green-300 text-xs text-green-800 rounded-md flex justify-between items-center">
+          <span className="font-semibold">✅ Solved</span>
+          <Link to={`/test/${test.id}/solutions`}>
+            <button className="bg-green-600 text-white text-xs px-3 py-1 rounded-lg hover:bg-green-700 transition duration-300 cursor-pointer">
+              See Solutions
+            </button>
+          </Link>
+        </div>
+      )}
+
       {/* Button Section */}
       <div className="mt-3 flex justify-between items-center">
         {/* Show More Button */}
@@ -116,7 +141,7 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
         </button>
 
         {/* Start Button (Only if not attempted) */}
-        {!attempted && (
+        {!attempted && !isSolved && (
           <Link to={`/test/${test.id}`}>
             <button className="bg-[#31096b] text-white text-xs px-4 py-2 rounded-lg hover:bg-[#5a1ca8] transition duration-300 cursor-pointer">
               Start
