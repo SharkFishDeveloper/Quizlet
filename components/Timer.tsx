@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { CgAlarm } from "react-icons/cg";
+import { submitTestAtom } from "../atoms/SubmitTestAtom";
+import { useAtom } from "jotai";
 
 const Timer = ({ duration, id }: { duration: number; id: string }) => {
+  
+  const [, setSubmitTest] = useAtom(submitTestAtom);
   const [timeLeft, setTimeLeft] = useState(() => {
     const savedTime = localStorage.getItem(`timeLeft_${id}`);
     return savedTime ? parseInt(savedTime, 10) : duration;
   });
 
   useEffect(() => {
-    if (timeLeft <= 0) return;
+    if (timeLeft <= 0) {
+      setSubmitTest((prev) => (prev ? [...prev, id] : [id]));
+      localStorage.setItem("test_submit", JSON.stringify([...JSON.parse(localStorage.getItem("test_submit") || "[]"), id]));
+      return;
+    };
 
     localStorage.setItem(`timeLeft_${id}`, timeLeft.toString());
     const timer = setInterval(() => {

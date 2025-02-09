@@ -13,6 +13,8 @@ import {questionIndexAtom} from "../../atoms/QuestionIndex";
 import SubmitButton from "../SubmitButton";
 import { submitTestAtom } from "../../atoms/SubmitTestAtom";
 import AnswerComponent from "../AnswerComponent";
+import { marked } from "marked";
+import { Link } from "react-router-dom";
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5);
@@ -93,8 +95,14 @@ const Test = () => {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="w-4 h-4 bg-gray-600 rounded-full animate-ping"></div>
+        <p className="text-gray-600 font-medium mt-2">Loading...</p>
+      </div>
+    );
   }
+  
 
   return (
     <div className="flex flex-col items-center space-y-6 w-full h-screen">
@@ -139,6 +147,7 @@ const Test = () => {
           )}
         </div>
 
+
         {/* Right Sidebar (Moves Below Center Div on Small Screens) */}
         <div className="col-span-12 sm:col-span-3 flex flex-col justify-center items-center sm:mt-0 mt-3 sm:mb-0 mb-4 bg-gray-200 rounded-2xl ">
           <div className="flex flex-col items-center space-y-4 mt-2">
@@ -180,6 +189,34 @@ const Test = () => {
             </div>
           </div>
         </div>
+            
+          {submitted && <div className="bg-gray-200 w-[90vw] text-white font-medium flex flex-col justify-evenly items-center p-2 rounded-xl shadow-lg ml-[50%]">
+            {/* Render Reading Material */}
+            <div className="text-left w-full space-y-4 leading-relaxed">
+            {(
+               <div className="bg-white bg-opacity-10 p-4 rounded-lg text-black">
+               <div
+                 dangerouslySetInnerHTML={{
+                   __html: marked(test?.questions[questionIndex].detailed_solution as string),
+                 }}
+               />
+             </div>
+)}
+            </div>
+
+            {/* Render Keywords */}
+            <div className="mt-6">
+              <h3 className="text-lg font-bold text-black underline">Keywords:</h3>
+              <p className="text-gray-600 text-sm">
+                {JSON.parse(test?.questions[questionIndex]?.reading_material?.keywords || "[]").join(", ")}
+              </p>
+            </div>
+
+        {test?.questions[questionIndex]?.reading_material.content_sections && (
+         <Link to={`/question/readmore/${questionIndex}`} className="text-black">Read more</Link>
+        )}
+</div>}
+
       </div>
     </div>
   );

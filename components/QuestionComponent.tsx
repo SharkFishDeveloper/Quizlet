@@ -15,8 +15,7 @@ const QuestionComponent = ({ question, index,test_id }: { question: Question; in
   const [submitted, setSubmitted] = useState(false);
   const [quiz,] = useAtom(quizAtom)
   const [optionselected,] = useAtom(selectedOptionsAtom)
-  const [correctoption,setCorrectOption] = useState<string>("");
-  const [correctQuesOptions, setCorrectQuesOptions] = useState<Record<string, string>>({});
+  const [correctQuesOptions, ] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if(submittedTests !== null){
@@ -30,11 +29,6 @@ const QuestionComponent = ({ question, index,test_id }: { question: Question; in
             }
           })
         })
-
-        // selectedOptions.forEach((item)=>{
-        //   if(item.question)
-        // })
-
       }
     }
   }, [correctQuesOptions, optionselected, quiz?.questions, submittedTests, test_id]);
@@ -108,26 +102,31 @@ const QuestionComponent = ({ question, index,test_id }: { question: Question; in
       <div className="mt-4 space-y-2">
         {question.options.map((option, i) => (
           <button
-            key={option.id}
-            onClick={() => handleOptionSelect(option.id.toString())}
-            className={`w-full text-left p-3 border border-gray-400 rounded-md flex items-center transition-all duration-200 cursor-pointer 
-              ${
-                submitted 
-                  ? option.id.toString() === correctQuesOptions[question.id] 
-                    ? "bg-green-600 text-white" // ✅ Highlight correct answer in green when submitted
+          key={option.id}
+          onClick={() => handleOptionSelect(option.id.toString())}
+          className={`w-full text-left p-3 border border-gray-400 rounded-md flex items-center transition-all duration-200 cursor-pointer 
+            ${
+              submitted 
+                ? option.id.toString() === correctQuesOptions[question.id] &&
+                  selectedOption === option.id.toString()
+                  ? "bg-yellow-500 text-white" // 🏆 Highlight correct selected option in GOLDEN
+                  : option.id.toString() === correctQuesOptions[question.id]
+                    ? "bg-green-600 text-white" // ✅ Correct answer (but not selected)
                     : selectedOption === option.id.toString()
-                      ? "bg-red-500 text-white" // ❌ If wrong option is selected, highlight in red
+                      ? "bg-red-500 text-white" // ❌ Incorrect selected option
                       : "hover:bg-gray-200"
-                  : selectedOption === option.id.toString()
-                    ? "bg-purple-600 text-white" // 🟣 Selected option before submitting
-                    : "hover:bg-gray-200"
-              }
-            `}
-            >
-            <span className={`mr-2 font-bold `}>
-              {optionLabels[i]}.</span>
-            {option.description}
-          </button>
+                : selectedOption === option.id.toString()
+                  ? "bg-purple-600 text-white" // 🟣 Selected option before submitting
+                  : "hover:bg-gray-200"
+            }
+          `}
+        >
+          <span className="mr-2 font-bold">
+            {optionLabels[i]}.
+          </span>
+          {option.description}
+        </button>
+        
         ))}
       </div>
 

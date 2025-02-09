@@ -16,6 +16,10 @@ interface Option {
     created_at: string;
     updated_at: string;
     content_sections: string[];
+    practice_material?: {  // Add this property
+      content: string[];
+      keywords:string[]
+    };
   }
   
   interface Question {

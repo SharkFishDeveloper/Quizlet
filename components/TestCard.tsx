@@ -58,19 +58,6 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <div className="bg-white shadow-md rounded-lg p-4 mb-4 w-full max-w-sm transition-transform hover:scale-105 border border-gray-200">
       {/* Title */}
@@ -178,6 +165,7 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
           <p>Topic: {test.topic}</p>
           <p>🔻 Negative Marks: {test.negative_marks}</p>
           <p>✅ Correct Marks: {test.correct_answer_marks}</p>
+          <p>Date created - {test.created_at.substring(0,10)}</p>
         </div>
       )}
     </div>

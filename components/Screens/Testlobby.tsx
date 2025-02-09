@@ -47,7 +47,12 @@ const TestLobby = () => {
       {tests !== null && tests.length > 0 ? (
         <TestCard test={tests[0]}/>
       ) : (
-        <p className="text-gray-600">Loading...</p>
+        <div className="flex items-center justify-center h-[70vh]">
+        <div className="relative flex items-center space-x-2">
+          <div className="w-4 h-4 bg-gray-600 rounded-full animate-ping"></div>
+          <p className="text-gray-600 font-md">Loading...</p>
+        </div>
+      </div>
       )}
     </div>
   );
