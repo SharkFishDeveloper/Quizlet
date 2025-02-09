@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FiCloud } from "react-icons/fi";
 import { submitTestAtom } from "../atoms/SubmitTestAtom";
 import { quizAtom } from "../atoms/IndiviualQuestion";

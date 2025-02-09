@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Quiz } from "../../interfaces/FullTest";
-import React from "react";
 import Timer from "../Timer";
 import QuestionComponent from "../QuestionComponent";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";

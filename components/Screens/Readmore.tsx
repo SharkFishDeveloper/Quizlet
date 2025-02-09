@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useParams } from "react-router-dom";
 import { quizAtom } from "../../atoms/IndiviualQuestion";
 import { useAtom } from "jotai";

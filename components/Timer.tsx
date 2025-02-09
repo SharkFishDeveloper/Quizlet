@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { CgAlarm } from "react-icons/cg";
 import { submitTestAtom } from "../atoms/SubmitTestAtom";
 import { useAtom } from "jotai";
@@ -28,7 +28,7 @@ const Timer = ({ duration, id }: { duration: number; id: string }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, id]);
+  }, [timeLeft, id, setSubmitTest]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);

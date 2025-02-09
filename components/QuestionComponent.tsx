@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { FaFlag } from "react-icons/fa"; // Import flag icon
 import { selectedOptionsAtom } from "../atoms/QuestionSolved";
