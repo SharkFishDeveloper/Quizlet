@@ -5,6 +5,7 @@ import { selectedOptionsAtom } from "../atoms/QuestionSolved";
 import { Question } from "../interfaces/FullTest";
 import { reminderQuestion } from "../atoms/ReminderQuestion";
 import { submitTestAtom } from "../atoms/SubmitTestAtom";
+import { quizAtom } from "../atoms/IndiviualQuestion";
 
 const QuestionComponent = ({ question, index,test_id }: { question: Question; index: number,test_id:string }) => {
   const optionLabels = ["A", "B", "C", "D", "E", "F"];
@@ -12,15 +13,33 @@ const QuestionComponent = ({ question, index,test_id }: { question: Question; in
   const [reminderQuestions, setReminderQuestions] = useAtom(reminderQuestion);
   const [submittedTests, ] = useAtom(submitTestAtom);
   const [submitted, setSubmitted] = useState(false);
-
+  const [quiz,] = useAtom(quizAtom)
+  const [optionselected,] = useAtom(selectedOptionsAtom)
+  const [correctoption,setCorrectOption] = useState<string>("");
+  const [correctQuesOptions, setCorrectQuesOptions] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if(submittedTests !== null){
       if(submittedTests.includes(test_id)){
         setSubmitted(true);
+
+        quiz?.questions.forEach((ques)=>{
+          ques.options.forEach((opt)=>{
+            if(opt.is_correct){
+              correctQuesOptions[ques.id] = opt.id.toString();
+            }
+          })
+        })
+
+        // selectedOptions.forEach((item)=>{
+        //   if(item.question)
+        // })
+
       }
     }
-  }, [submittedTests, test_id]);
+  }, [correctQuesOptions, optionselected, quiz?.questions, submittedTests, test_id]);
+
+
 
   const selectedOption = selectedOptions.find((q) => q.question === question.id.toString())?.selectedOptionId;
 
@@ -52,14 +71,18 @@ const QuestionComponent = ({ question, index,test_id }: { question: Question; in
         ? updatedPrev.filter((id) => id !== question.id.toString())
         : [...updatedPrev, question.id.toString()];
   
-      // Store the updated reminders in localStorage
       localStorage.setItem(`test_${test_id}_reminders`, JSON.stringify(updatedReminders));
   
-      return updatedReminders; // Ensure state updates properly
+      return updatedReminders; 
     });
   };
   
   
+
+
+
+
+
 
   return (
     <div className="w-full max-w-3xl bg-white shadow-md rounded-lg p-5 border border-gray-300 relative">
@@ -76,20 +99,33 @@ const QuestionComponent = ({ question, index,test_id }: { question: Question; in
         </button>
       </div>
 
+      {/* <p>HERE - {JSON.stringify(correctQuesOptions)}</p> */}
+
       {/* Question Description */}
       <p className="mt-2 text-gray-700 text-lg break-words overflow-auto">{question.description}</p>
 
-      {/* Options Section */}
+      {/* Options */}
       <div className="mt-4 space-y-2">
         {question.options.map((option, i) => (
           <button
             key={option.id}
             onClick={() => handleOptionSelect(option.id.toString())}
-            className={`w-full text-left p-3 border border-gray-400 rounded-md flex items-center transition-all duration-200 cursor-pointer ${
-              selectedOption === option.id.toString() ? "bg-purple-600 text-white" : "hover:bg-gray-200"
-            }`}
-          >
-            <span className="mr-2 font-bold">{optionLabels[i]}.</span>
+            className={`w-full text-left p-3 border border-gray-400 rounded-md flex items-center transition-all duration-200 cursor-pointer 
+              ${
+                submitted 
+                  ? option.id.toString() === correctQuesOptions[question.id] 
+                    ? "bg-green-600 text-white" // ✅ Highlight correct answer in green when submitted
+                    : selectedOption === option.id.toString()
+                      ? "bg-red-500 text-white" // ❌ If wrong option is selected, highlight in red
+                      : "hover:bg-gray-200"
+                  : selectedOption === option.id.toString()
+                    ? "bg-purple-600 text-white" // 🟣 Selected option before submitting
+                    : "hover:bg-gray-200"
+              }
+            `}
+            >
+            <span className={`mr-2 font-bold `}>
+              {optionLabels[i]}.</span>
             {option.description}
           </button>
         ))}

@@ -18,6 +18,7 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
   const [isSolved, setIsSolved] = useState(false);
   const [, setSubmittedTests] = useAtom(submitTestAtom);
   
+  
   useEffect(() => {
     // Check if the test was previously attempted
     const storedTime = localStorage.getItem(`timeLeft_${test.id}`);
@@ -54,6 +55,21 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
   };
 
   const [showMore, setShowMore] = useState(false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 mb-4 w-full max-w-sm transition-transform hover:scale-105 border border-gray-200">

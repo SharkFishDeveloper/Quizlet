@@ -42,7 +42,7 @@ const TestCalender = () => {
                   className={`w-[2rem] h-[2rem] flex items-center justify-center border rounded-md text-sm font-semibold cursor-pointer
                     ${
                       selectedOption
-                        ? "bg-green-500 text-white" // Attempted questions → Green
+                        ? "bg-purple-500 text-white" // Attempted questions → Green
                         : reminderQuestions?.includes(question.id.toString())
                         ? "bg-yellow-300 text-black" // Flagged but not attempted → Yellow
                         : "bg-gray-300 text-black" // Default → Gray
