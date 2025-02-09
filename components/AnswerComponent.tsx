@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { quizAtom } from "../atoms/IndiviualQuestion";
 import { selectedOptionsAtom } from "../atoms/QuestionSolved";
 import { useAtom } from "jotai";

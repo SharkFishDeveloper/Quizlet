@@ -1,7 +1,7 @@
 import { FaBookOpen, FaCheckCircle, FaClock } from "react-icons/fa";
 import StartButton from "./StartButton";
 import { motion } from "framer-motion";
-import React from "react";
+
 
 const HeroSection = () => {
   return (
