@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { selectedOptionsAtom } from '../atoms/QuestionSolved';
 import { useAtom } from "jotai";
 import { reminderQuestion } from "../atoms/ReminderQuestion";
+import { submitTestAtom } from "../atoms/SubmitTestAtom";
 
 interface TestCardProps {
   test: Test;
@@ -15,7 +16,8 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
   const [, setReminderQuestions] = useAtom(reminderQuestion);
   const [, setSelectedOptions] = useAtom(selectedOptionsAtom);
   const [isSolved, setIsSolved] = useState(false);
-
+  const [, setSubmittedTests] = useAtom(submitTestAtom);
+  
   useEffect(() => {
     // Check if the test was previously attempted
     const storedTime = localStorage.getItem(`timeLeft_${test.id}`);
@@ -45,6 +47,10 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
     setSelectedOptions([]);
     setReminderQuestions([]);
     setIsSolved(false)
+    if(submittedTests !== null){
+      //@ts-expect-error: S
+      setSubmittedTests((prev)=>prev.filter((id: string) => id !== test.id.toString()));
+    }
   };
 
   const [showMore, setShowMore] = useState(false);
@@ -122,7 +128,7 @@ const TestCard: React.FC<TestCardProps> = ({ test }) => {
       {isSolved && (
         <div className="mt-3 p-2 bg-green-100 border border-green-300 text-xs text-green-800 rounded-md flex justify-between items-center">
           <span className="font-semibold">✅ Solved</span>
-          <Link to={`/test/${test.id}/solutions`}>
+          <Link to={`/test/${test.id}`}>
             <button className="bg-green-600 text-white text-xs px-3 py-1 rounded-lg hover:bg-green-700 transition duration-300 cursor-pointer">
               See Solutions
             </button>

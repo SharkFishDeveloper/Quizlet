@@ -1,19 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { FaFlag } from "react-icons/fa"; // Import flag icon
 import { selectedOptionsAtom } from "../atoms/QuestionSolved";
 import { Question } from "../interfaces/FullTest";
 import { reminderQuestion } from "../atoms/ReminderQuestion";
+import { submitTestAtom } from "../atoms/SubmitTestAtom";
 
 const QuestionComponent = ({ question, index,test_id }: { question: Question; index: number,test_id:string }) => {
   const optionLabels = ["A", "B", "C", "D", "E", "F"];
   const [selectedOptions, setSelectedOptions] = useAtom(selectedOptionsAtom);
   const [reminderQuestions, setReminderQuestions] = useAtom(reminderQuestion);
+  const [submittedTests, ] = useAtom(submitTestAtom);
+  const [submitted, setSubmitted] = useState(false);
 
+
+  useEffect(() => {
+    if(submittedTests !== null){
+      if(submittedTests.includes(test_id)){
+        setSubmitted(true);
+      }
+    }
+  }, [submittedTests, test_id]);
 
   const selectedOption = selectedOptions.find((q) => q.question === question.id.toString())?.selectedOptionId;
 
   const handleOptionSelect = (optionId: string) => {
+    if(submitted)return;
     setSelectedOptions((prev) => {
       const updatedSelections = prev.map((q) =>
         q.question === question.id.toString() ? { ...q, selectedOptionId: optionId } : q
@@ -28,10 +40,12 @@ const QuestionComponent = ({ question, index,test_id }: { question: Question; in
   };
 
   const handleClearSelection = () => {
+    if(submitted)return;
     setSelectedOptions((prev) => prev.filter((q) => q.question !== question.id.toString()));
   };
 
   const toggleReminder = () => {
+    if(submitted)return;
     setReminderQuestions((prev) => {
       const updatedPrev = prev ?? []; // Ensure prev is always an array
       const updatedReminders = updatedPrev.includes(question.id.toString())

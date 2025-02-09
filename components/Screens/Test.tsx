@@ -12,6 +12,7 @@ import {quizAtom} from "../../atoms/IndiviualQuestion";
 import {questionIndexAtom} from "../../atoms/QuestionIndex";
 import SubmitButton from "../SubmitButton";
 import { submitTestAtom } from "../../atoms/SubmitTestAtom";
+import AnswerComponent from "../AnswerComponent";
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5);
@@ -101,14 +102,14 @@ const Test = () => {
         <div className="mt-4">
           <h1 className="text-2xl font-semibold text-gray-800">{test.title}</h1>
 
-         {submitted ?
+         {!submitted ?
          (
-          <div className="flex justify-evenly items-center">
+          <div className="flex justify-evenly items-center w-full mt-4">
           <SubmitButton/>
           <Timer duration={900} id={test.id.toString()} />
           </div>
          ) : 
-         (<div className="font-semibold text-green-600 items-center flex justify-center underline-offset-1 underline text-xl mb-[-1.7rem]">
+         (<div className="font-semibold text-green-600 items-center flex justify-center underline-offset-1 underline text-xl ">
           Solutions
          </div>)
           }
@@ -117,7 +118,15 @@ const Test = () => {
       )}
 
       <div className="grid grid-cols-12 w-full h-[70vh] gap-2">
-        <div className="hidden sm:block sm:col-span-3"></div>
+
+        {/* Left column */}
+        <div
+  className={`col-span-12 sm:col-span-3 justify-center items-center rounded-xl p-4 min-h-[53vh] sm:min-h-[70vh] overflow-auto md:mt-1
+  ${submitted ? "flex bg-gray-200 sm:bg-white" : "hidden sm:flex bg-white"}`}
+>
+  {submitted && <AnswerComponent />}
+</div>
+
 
         {/* Center (Main Question Area) */}
         <div className="col-span-12 sm:col-span-6 flex flex-col justify-center items-center p-4 bg-white shadow-lg rounded-lg max-h-full">
